@@ -1,9 +1,9 @@
 openapi: 3.0.3
 info:
-  title: Aws-lambda Product service
+  title: Aws-lambda product service
   version: 1.0.0
 servers:
-  - url: https://myserver
+  - url: https://n5p4x5lvvg.execute-api.eu-west-1.amazonaws.com/dev
 tags:
   - name: products
     description: Everything about your products
