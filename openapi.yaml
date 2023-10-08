@@ -1,0 +1,95 @@
+openapi: 3.0.3
+info:
+  title: Aws-lambda Product service
+  version: 1.0.0
+servers:
+  - url: https://myserver
+tags:
+  - name: products
+    description: Everything about your products
+paths:
+  /products:
+    get:
+      tags:
+        - products
+      summary: Get all products
+      description: Get all products from the store
+      operationId: findProducts
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '500':
+          description: Internal error
+  /products/{productId}:
+    get:
+      tags:
+        - products
+      summary: Find product by ID
+      description: Returns a single product
+      operationId: getPetById
+      parameters:
+        - name: productId
+          in: path
+          description: ID of product to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Product not found:
+                  value: Product not found
+        '500':
+          description: Internal error
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int64
+          example: 10
+        description:
+          type: string
+          example: Description
+        id:
+          type: string
+          format: uuid
+          example: 7567ec4b-b10c-48c5-9345-fc73348a80a1
+        price:
+          type: number
+          format: int64
+          example: 15
+        title:
+          type: string
+          example: Title
+        imgUrl:
+          type: string
+          example: https://some_url
+      xml:
+        name: product
