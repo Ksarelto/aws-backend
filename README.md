@@ -6,7 +6,7 @@ For detailed instructions, please refer to the [documentation](https://www.serve
 
 ## Swagger API
 
-[Swagger API][https://ksarelto.github.io/aws-backend/]
+[Swagger API](https://ksarelto.github.io/aws-backend/)
 ## Installation/deployment instructions
 
 Depending on your preferred package manager, follow the instructions below to deploy your project.
