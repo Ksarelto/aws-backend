@@ -13,7 +13,7 @@ const getProductById: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   try {
-    const id = event.pathParameters.id
+    const id = event.pathParameters?.id
     const product = Products.find((product) => product.id === id)
 
     if (!product) {
@@ -24,7 +24,7 @@ const getProductById: APIGatewayProxyHandler = async (
     }
 
     return {
-      statusCode: 200,
+      statusCode: StatusCode.SUCCESS,
       body: JSON.stringify(product)
     }
   } catch (err: any) {
