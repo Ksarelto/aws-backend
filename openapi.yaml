@@ -31,7 +31,7 @@ paths:
                   $ref: '#/components/schemas/Product'
         '500':
           description: Internal error
-  /products/{productId}:
+  /products/{id}:
     get:
       tags:
         - products
@@ -39,13 +39,14 @@ paths:
       description: Returns a single product
       operationId: getPetById
       parameters:
-        - name: productId
+        - name: id
           in: path
           description: ID of product to return
           required: true
           schema:
             type: string
             format: uuid
+          example: 7567ec4b-b10c-48c5-9345-fc73c48a80a0
       responses:
         '200':
           description: successful operation
