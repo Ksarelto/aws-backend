@@ -8,6 +8,7 @@ import { Products } from '@/database/products'
 import { HttpError } from '@/constants/httpError';
 import { StatusCode } from '@/constants/statusCode';
 import { ResponseMessage } from '@/constants/responseMessage';
+import { Headers } from '@/constants/headers';
 
 const getProductById: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent
@@ -25,7 +26,8 @@ const getProductById: APIGatewayProxyHandler = async (
 
     return {
       statusCode: StatusCode.SUCCESS,
-      body: JSON.stringify(product)
+      body: JSON.stringify(product),
+      headers: { ...Headers}
     }
   } catch (err: any) {
     if(err instanceof HttpError) {
