@@ -1,0 +1,6 @@
+{
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": "{\"count\": 10,\"description\": \"Cool fast car\",\"price\": 264000,\"title\": \"Mini Cooper\",\"imageUrl\": \"https://i.ibb.co/Tv1yz2B/mini-cooper.jpg\"}"
+}

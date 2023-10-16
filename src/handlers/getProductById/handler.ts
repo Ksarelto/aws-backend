@@ -4,26 +4,21 @@ import {
   APIGatewayProxyHandler,
   APIGatewayProxyResult
 } from 'aws-lambda';
-import { Products } from '@/database/products'
 import { HttpError } from '@/constants/httpError';
 import { StatusCode } from '@/constants/statusCode';
 import { ResponseMessage } from '@/constants/responseMessage';
 import { Headers } from '@/constants/headers';
+import { getProduct } from '@/services/product.service';
+import { getStock } from '@/services/stock.service';
 
 const getProductById: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   try {
     const id = event.pathParameters?.id
-    const product = Products.find((product) => product.id === id)
-
-    if (!product) {
-      throw new HttpError(
-        StatusCode.NOT_FOUND,
-        ResponseMessage.NOT_FOUND
-      )
-    }
-
+    const stock = await getStock(id)
+    const product = await getProduct(id, stock.count)
+    
     return {
       statusCode: StatusCode.SUCCESS,
       body: JSON.stringify(product),

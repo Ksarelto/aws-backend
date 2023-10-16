@@ -3,5 +3,5 @@
     "Content-Type": "application/json"
   },
   "body": "{\"name\": \"Frederic\"}",
-  "queryStringParameters": {"id": "7567ec4b-b10c-48c5-9445-fc73c48a80a2"}
+  "pathParameters": {"id": "3d4781f6-784f-47e7-9392-5bceb9593d20"}
 }
