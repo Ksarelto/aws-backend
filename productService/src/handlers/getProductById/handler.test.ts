@@ -1,4 +1,4 @@
-import {  Context } from "aws-lambda"
+import type { Context } from "aws-lambda"
 import { main } from "./handler"
 import { StatusCode } from "@/constants/statusCode"
 import { getStock } from "@/services/stock.service"
@@ -32,7 +32,7 @@ const mockEvent = {
   multiValueQueryStringParameters: null,
   queryStringParameters: null,
   stageVariables: null,
-  requestContext: {} as any,
+  requestContext: {},
   body: '',
   rawBody: '',
   resource: '/',

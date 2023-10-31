@@ -33,7 +33,7 @@ const serverlessConfiguration: AWS = {
         Resource: [
             `arn:aws:s3:::${BUCKET_NAME}`
         ]
-    },
+      },
       {
           Effect: "Allow",
           Action: [
@@ -49,7 +49,6 @@ const serverlessConfiguration: AWS = {
       }
     ]
   },
-  // import the function via paths
   functions: { importProductsFile, importProductParser },
   package: { individually: true },
   custom: {

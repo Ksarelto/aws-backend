@@ -10,8 +10,10 @@ import { ResponseMessage } from '@/constants/responseMessage';
 import { StatusCode } from '@/constants/statusCode';
 import { Headers } from '@/constants/headers';
 import middy from '@middy/core';
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 
 const s3 = new S3Client({ region: 'eu-west-1' })
+const sqs = new SQSClient({ region: 'eu-west-1' })
 
 const importProductParser = async ( event: S3Event ) => {
   try {
@@ -28,14 +30,18 @@ const importProductParser = async ( event: S3Event ) => {
       const response = await s3.send(getCommand)
       const stream = response.Body
 
-      const data = []
 
       stream.pipe(csv())
-      .on('data', (row) => {
-        data.push(row)
+      .on('data', async (row) => {
+        const command = new SendMessageCommand({
+          MessageBody: JSON.stringify(row),
+          QueueUrl: process.env.SQS_URL
+        })
+        
+        await sqs.send(command)
       })
       .on('end', () => {
-        console.log(`CSV file processing done: ${JSON.stringify(data)}`);
+        console.log(`CSV file processing done`);
 
         const currentPath = object.key
         const newPath = object.key.replace('uploaded/', 'parsed/')
