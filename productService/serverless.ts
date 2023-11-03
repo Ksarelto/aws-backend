@@ -11,6 +11,7 @@ const REGION = process.env.REGION as string
 const SERVICE_NAME = process.env.SERVICE_NAME as string
 const PRODUCTS_TABLE_ARN = process.env.PRODUCTS_TABLE_ARN as string
 const STOCKS_TABLE_ARN = process.env.STOCKS_TABLE_ARN as string
+const QUEUE_ARN = process.env.QUEUE_ARN as string
 const WITHOUT_FILTERS_EMAIL = process.env.WITHOUT_FILTERS_EMAIL as string
 const WITH_FILTERS_EMAIL = process.env.WITH_FILTERS_EMAIL as string
 
@@ -64,9 +65,7 @@ const serverlessConfiguration: AWS = {
           {
             Effect: 'Allow',
             Action: 'sqs:*',
-            Resource: {
-              'Fn::GetAtt': ['CatalogItemsQueue', 'Arn']
-            }
+            Resource: QUEUE_ARN
           },
           {
             Effect: 'Allow',

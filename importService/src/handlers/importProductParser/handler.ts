@@ -30,15 +30,14 @@ const importProductParser = async ( event: S3Event ) => {
       const response = await s3.send(getCommand)
       const stream = response.Body
 
-
       stream.pipe(csv())
-      .on('data', async (row) => {
+      .on('data', (row) => {
         const command = new SendMessageCommand({
           MessageBody: JSON.stringify(row),
           QueueUrl: process.env.SQS_URL
         })
-        
-        await sqs.send(command)
+
+        sqs.send(command)
       })
       .on('end', () => {
         console.log(`CSV file processing done`);

@@ -7,6 +7,7 @@ configDotenv()
 const BUCKET_NAME = process.env.BUCKET_NAME as string
 const REGION = process.env.REGION as string
 const SERVICE_NAME = process.env.SERVICE_NAME as string
+const SQS_URL = process.env.SQS_URL as string
 
 const serverlessConfiguration: AWS = {
   service: SERVICE_NAME,
@@ -22,6 +23,7 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      SQS_URL: SQS_URL
     },
     region: REGION as any,
     iamRoleStatements: [
