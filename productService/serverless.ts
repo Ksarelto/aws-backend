@@ -2,9 +2,21 @@ import type { AWS } from '@serverless/typescript';
 import getProductsList from '@/handlers/getProductsList';
 import getProductById from '@/handlers/getProductById';
 import createProduct from '@/handlers/createProduct';
+import catalogBatchProcess from '@/handlers/catalogBatchProcess';
+import { configDotenv } from "dotenv";
+
+configDotenv()
+
+const REGION = process.env.REGION as string
+const SERVICE_NAME = process.env.SERVICE_NAME as string
+const PRODUCTS_TABLE_ARN = process.env.PRODUCTS_TABLE_ARN as string
+const STOCKS_TABLE_ARN = process.env.STOCKS_TABLE_ARN as string
+const QUEUE_ARN = process.env.QUEUE_ARN as string
+const WITHOUT_FILTERS_EMAIL = process.env.WITHOUT_FILTERS_EMAIL as string
+const WITH_FILTERS_EMAIL = process.env.WITH_FILTERS_EMAIL as string
 
 const serverlessConfiguration: AWS = {
-  service: 'aws-shop',
+  service: SERVICE_NAME,
   frameworkVersion: '3',
   plugins: ['serverless-esbuild'],
   provider: {
@@ -17,8 +29,14 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      SQS_URL: {
+        Ref: 'CatalogItemsQueue'
+      },
+      SNS_URL: {
+        Ref: 'ProductTopic'
+      }
     },
-    region: "eu-west-1",
+    region: REGION as any,
     iam: {
       role: {
         statements: [
@@ -31,7 +49,7 @@ const serverlessConfiguration: AWS = {
               'dynamodb:UpdateItem',
               'dynamodb:DeleteItem'
             ],
-            Resource: 'arn:aws:dynamodb:eu-west-1:551024590928:table/Products'
+            Resource: PRODUCTS_TABLE_ARN
           },
           {
             Effect: 'Allow',
@@ -42,7 +60,19 @@ const serverlessConfiguration: AWS = {
               'dynamodb:UpdateItem',
               'dynamodb:DeleteItem'
             ],
-            Resource: 'arn:aws:dynamodb:eu-west-1:551024590928:table/Stocks'
+            Resource: STOCKS_TABLE_ARN
+          },
+          {
+            Effect: 'Allow',
+            Action: 'sqs:*',
+            Resource: QUEUE_ARN
+          },
+          {
+            Effect: 'Allow',
+            Action: 'sns:*',
+            Resource: {
+              Ref: 'ProductTopic'
+            }
           }
         ]
       }
@@ -93,13 +123,48 @@ const serverlessConfiguration: AWS = {
             WriteCapacityUnits: 1
           }
         }
+      },
+      CatalogItemsQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'catalogItemsQueue',
+        },
+      },
+      ProductTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          DisplayName: 'ProductTopic',
+          TopicName: 'productTopic',
+        },
+      },
+      EmailSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Protocol: 'email',
+          TopicArn: { Ref: 'ProductTopic' },
+          Endpoint: WITHOUT_FILTERS_EMAIL,
+        }, 
+      },
+      EmailPriceSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Protocol: 'email',
+          TopicArn: { Ref: 'ProductTopic' },
+          Endpoint: WITH_FILTERS_EMAIL,
+          FilterPolicy: {
+            count: [{
+              numeric: ['<', 10000]
+            }]
+          }
+        }
       }
     }
   },
   functions: {
     getProductsList,
     getProductById,
-    createProduct
+    createProduct,
+    catalogBatchProcess
   },
   package: { individually: true },
   custom: {

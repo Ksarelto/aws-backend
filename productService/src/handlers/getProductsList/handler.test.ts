@@ -13,7 +13,7 @@ const mockEvent = {
   multiValueQueryStringParameters: null,
   pathParameters: null,
   stageVariables: null,
-  requestContext: {} as any,
+  requestContext: {},
   body: '',
   rawBody: '',
   resource: '/',

@@ -13,10 +13,14 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.428.0",
+    "@aws-sdk/client-sns": "^3.438.0",
     "@aws-sdk/lib-dynamodb": "^3.428.0",
     "@middy/core": "^3.4.0",
     "@middy/http-json-body-parser": "^3.4.0",
-    "joi": "^17.11.0"
+    "dotenv": "^16.3.1",
+    "install": "^0.13.0",
+    "joi": "^17.11.0",
+    "npm": "^10.2.1"
   },
   "devDependencies": {
     "@serverless/typescript": "^3.0.0",
